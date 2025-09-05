@@ -21,6 +21,7 @@ const CustomInputField = ({
    <div>
      
       <input
+      className='bg-amber-50 text-normal rounded-sm text-black py-2 my-2 p-2'
         placeholder={placeholder}
         type={type}
         name={name}                

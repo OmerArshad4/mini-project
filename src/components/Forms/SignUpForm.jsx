@@ -2,8 +2,10 @@ import React from "react";
 import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
 import CustomInputField from "../Input/Index";
-const SignupForm = () => {
-
+import { addUser } from "../../Redux/features/Auth/userSlice";
+import { useDispatch } from "react-redux";
+const SignupForm = ({showListing, setShowListing}) => {
+    const dispatch = useDispatch()
     const validationSchema = Yup.object({
         email: Yup.string().email("Invalid email").required("Required"),
         city: Yup.string().required("Required"),
@@ -11,10 +13,12 @@ const SignupForm = () => {
     });
     return (
         <Formik
-            initialValues={{ email: "", userName: "", city: "" }}
+            initialValues={{ id: "", email: "", userName: "", city: "" }}
             validationSchema={validationSchema}
             onSubmit={(values) => {
                 console.log("Form Data:", values);
+                dispatch(addUser(values))
+               setShowListing(false)
             }}
         >
             {({
@@ -29,7 +33,26 @@ const SignupForm = () => {
                 setFieldValue,
 
             }) => (
+                  <>
+                    {!showListing && (
+             
                 <Form onSubmit={handleSubmit}>
+                    <h2 className=" my-2 text-xl text-white">Add User Information</h2>
+                    <CustomInputField
+                        name="id"
+                        type="text"
+                        label={"User Id"}
+                        placeholder="Enter User Id"
+
+                        error={
+                            errors.id && touched.id
+                                ? errors.id
+                                : ""
+                        }
+                        value={values.id}
+                        onBlurHandle={handleBlur}
+                        onChangeHandle={handleChange}
+                    />
                     <CustomInputField
                         name="userName"
                         type="text"
@@ -80,8 +103,9 @@ const SignupForm = () => {
 
 
 
-                    <button type="submit">Submit</button>
-                </Form>
+                    <button className="bg-blue-700 text-white rounded-md py-2 w-full cursor-pointer hover:bg-blue-200 hover:text-blue-700" type="submit">Submit</button>
+                </Form> ) }
+                     </>
             )}
         </Formik>
     );
